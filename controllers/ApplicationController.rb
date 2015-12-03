@@ -6,7 +6,7 @@ class ApplicationController < Sinatra::Base
   # connect to DB using ActiveRecord
   ActiveRecord::Base.establish_connection(
     :adapter  => "postgresql",
-    :database => "vader"
+    :database => "ga_wdi_dragons_db"
   )
 
   # set folder for templates to ../views, but make the path absolute

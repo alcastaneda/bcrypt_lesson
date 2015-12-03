@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       erb :users_already_exists
     end
     # generate a salt and hash to use
-    user = UsersModel.new(user_email: params[:user_email], password: params[:password])
+    user = UsersModel.new(user_email: params[:user_email], user_name: params[:user_name],password: params[:password])
     # password_salt = BCrypt::Engine.generate_salt
     # password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
 
@@ -46,9 +46,13 @@ class UsersController < ApplicationController
   end
 
   post "/login" do
+    #binding.pry
     if self.does_user_exist(params[:user_name]) == true
-      user = UsersModel.where(:user_name => params[:user_name]).first!
-      if user.authenticate(params[:user_name], params[:password])
+      p 'user exists'
+      user = UsersModel.where(:user_name => params[:user_name]).first
+      p user
+      binding.pry
+      if UsersModel.authenticate(params[:user_name], params[:password])
         session[:current_user] = user
         redirect "/"
       end
