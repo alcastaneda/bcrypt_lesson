@@ -5,3 +5,4 @@ gem 'sinatra'
 gem 'json'
 gem "sinatra-activerecord" #activerecord orm
 gem 'bcrypt'
+gem 'pry'
