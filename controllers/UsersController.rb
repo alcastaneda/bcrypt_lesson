@@ -20,18 +20,19 @@ class UsersController < ApplicationController
     if self.does_user_exist(params[:user_name]) == true
       erb :users_already_exists
     end
-
     # generate a salt and hash to use
-    password_salt = BCrypt::Engine.generate_salt
-    password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
+    user = UsersModel.new(user_email: params[:user_email], password: params[:password])
+    # password_salt = BCrypt::Engine.generate_salt
+    # password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
 
-    new_user = UsersModel.new
-    new_user.user_name = params[:user_name]
-    new_user.user_email = params[:user_email]
-    new_user.password_salt = password_salt
-    new_user.password_hash = password_hash
-    new_user.is_admin = false
-    new_user.save
+    # new_user = UsersModel.new
+    # new_user.user_name = params[:user_name]
+    # new_user.user_email = params[:user_email]
+    # new_user.password_salt = password_salt
+    # new_user.password_hash = password_hash
+    # new_user.is_admin = false
+
+    user.save
 
     session[:current_user] = user
 
@@ -47,7 +48,7 @@ class UsersController < ApplicationController
   post "/login" do
     if self.does_user_exist(params[:user_name]) == true
       user = UsersModel.where(:user_name => params[:user_name]).first!
-      if user.password_hash == BCrypt::Engine.hash_secret(params[:password], user.password_salt)
+      if user.authenticate(params[:user_name], params[:password])
         session[:current_user] = user
         redirect "/"
       end
